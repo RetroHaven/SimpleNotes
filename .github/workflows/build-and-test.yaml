@@ -9,6 +9,7 @@ on:
     branches:
       - master
       - main
+      - dev
 
 jobs:
   build:
@@ -27,15 +28,15 @@ jobs:
       - name: Set up Maven
         uses: stCarolas/setup-maven@v4.5
         with:
-          maven-version: 3.9.1
+          maven-version: 3.9.9
 
       - name: build application
         shell: bash
         run: |
-          mvn clean install
+          mvn clean package
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-artifact
+          name: artifacts
           path: target/*.jar

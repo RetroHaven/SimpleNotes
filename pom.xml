@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Poseidon-Plugin-Template</artifactId>
+    <groupId>org.eleanorsilly.mc.notes</groupId>
+    <artifactId>SimpleNotes</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <description>A template for creating plugins for the Poseidon server software.</description>
+    <description>A note system for moderators and admins, with the objective to be light on the system and on the codebase.</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

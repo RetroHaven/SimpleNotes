@@ -1,22 +1,36 @@
 name: ${project.name}
 description: ${project.description}
-main: org.retromc.templateplugin.TemplatePlugin
+main: org.eleanorsilly.mc.notes
 version: ${project.version}
 authors:
-  - JohnyMuffin
+  - eleanorsilly
 softdepend:
   - Essentials
 
 commands:
   testcommand:
-    description: A test command for the plugin.
-    usage: /<command> [args]
-    aliases: [tc]
-    permission: myplugin.testcommand
-    permission-message: You do not have permission to use this command.
+    description: The main command of the plugin. /note help for more details.
+    usage: /note [args]
+    aliases: [notes, warning, warnings]
 
 permissions:
-  myplugin.*:
-    description: Gives access to all myplugin commands.
+  simplenotes.*:
+    description: Gives access to all commands of the plugin. Should be used sparingly, e.g. for admins.
     children:
-      myplugin.testcommand: true
+      simplenotes.addnotes: true
+      simplenotes.removenotes: true
+      simplenotes.seenotes.self: true
+      simplenotes.seenotes.others: true
+  simplenotes.addnotes:
+    description: Gives the permission to add notes/warnings.
+  simplenotes.removenotes:
+    description: Gives the permission to remove notes/warnings.
+  simplenotes.seenotes.*:
+    description: Gives the permission to see the notes/warnings of all players.
+    children:
+      simplenotes.seenotes.self: true
+      simplenotes.seenotes.others: true
+  simplenotes.seenotes.self:
+    description: Gives the permission to see your own notes/warnings
+  simplenotes.seenotes.others:
+    description: "Gives the permission to see other people's notes/warnings"

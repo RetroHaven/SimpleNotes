@@ -36,9 +36,10 @@ jobs:
 
       - name: Create GitHub Release
         if: ${{ !endsWith(env.PROJECT_VERSION, '-SNAPSHOT') }}
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.PROJECT_VERSION }}
+          body_path: changelogs/${{ env.PROJECT_VERSION }}.md
           files: |
             target/*.jar
         env:
