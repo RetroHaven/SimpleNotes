@@ -18,25 +18,8 @@
     <repositories>
         <!-- Repository for resolving release dependencies -->
         <repository>
-            <id>johnymuffin-nexus-releases</id>
-            <url>https://repository.johnymuffin.com/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <!-- Repository for resolving snapshot dependencies -->
-        <repository>
-            <id>johnymuffin-nexus-snapshots</id>
-            <url>https://repository.johnymuffin.com/repository/maven-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -64,9 +47,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.legacyminecraft.poseidon</groupId>
-            <artifactId>poseidon-craftbukkit</artifactId>
-            <version>1.1.8</version>
+            <groupId>com.github.retromcorg</groupId>
+            <artifactId>Project-Poseidon</artifactId>
+            <version>1.1.10-250328-1731-f67a8e3</version>
         </dependency>
 
     </dependencies>
