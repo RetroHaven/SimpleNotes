@@ -1,9 +1,9 @@
-package org.retromc.templateplugin;
+package org.eleanorsilly.mc.notes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.retromc.templateplugin.commands.TemplateTestCommand;
+import org.eleanorsilly.mc.notes.commands.TemplateTestCommand;
 
 import java.io.File;
 import java.util.logging.Level;

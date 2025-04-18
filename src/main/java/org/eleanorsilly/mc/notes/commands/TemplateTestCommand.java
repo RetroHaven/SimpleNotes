@@ -1,11 +1,11 @@
-package org.retromc.templateplugin.commands;
+package org.eleanorsilly.mc.notes.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.retromc.templateplugin.TemplateConfig;
-import org.retromc.templateplugin.TemplatePlugin;
+import org.eleanorsilly.mc.notes.TemplateConfig;
+import org.eleanorsilly.mc.notes.TemplatePlugin;
 
 public class TemplateTestCommand implements CommandExecutor {
 

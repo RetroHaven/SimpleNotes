@@ -1,4 +1,4 @@
-package org.retromc.templateplugin;
+package org.eleanorsilly.mc.notes;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
