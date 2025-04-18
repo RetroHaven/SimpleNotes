@@ -1,3 +1,5 @@
+# THIS IS NOT PRODUCTION READY BY ANY MEANS. DO NOT INSTALL.
+
 # SimpleNotes
 
 This plugin aims to provide a note/warning system implemented easily for beta 1.7.3. No other Minecraft versions are targeted and no support is provided for those other versions.
