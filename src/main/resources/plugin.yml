@@ -8,7 +8,7 @@ softdepend:
   - Essentials
 
 commands:
-  testcommand:
+  notecommand:
     description: The main command of the plugin. /note help for more details.
     usage: /note [args]
     aliases: [notes, warning, warnings]
