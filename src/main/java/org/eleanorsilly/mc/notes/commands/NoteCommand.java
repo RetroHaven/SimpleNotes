@@ -23,6 +23,7 @@ public class NoteCommand implements CommandExecutor {
             sender.sendMessage("You do not have permission to use this subcommand.");
             return true;
         }
+        return false;
     }
 
     public boolean NoteRemove(CommandSender sender, String[] args) {
@@ -30,15 +31,15 @@ public class NoteCommand implements CommandExecutor {
             sender.sendMessage("You do not have permission to use this subcommand.");
             return true;
         }
-        return false
+        return false;
     }
 
     public boolean NoteList(CommandSender sender, String[] args) {
-        return false
+        return false;
     }
 
     public boolean NoteHelp(CommandSender sender) {
-        return false
+        return false;
     }
 
     @Override

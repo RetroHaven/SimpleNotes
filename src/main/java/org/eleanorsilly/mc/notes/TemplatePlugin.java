@@ -61,6 +61,6 @@ public class TemplatePlugin extends JavaPlugin {
     }
 
     public boolean WriteToFile(String filename, String content) {
-        return false
+        return false;
     }
 }
