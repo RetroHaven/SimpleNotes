@@ -11,7 +11,7 @@ commands:
   notecommand:
     description: The main command of the plugin. /note help for more details.
     usage: /note [args]
-    aliases: [notes, warning, warnings]
+    aliases: [notes, warn, warns, warning, warnings]
 
 permissions:
   simplenotes.*:
@@ -19,18 +19,36 @@ permissions:
     children:
       simplenotes.addnotes: true
       simplenotes.removenotes: true
-      simplenotes.seenotes.self: true
-      simplenotes.seenotes.others: true
+      simplenotes.see.self.notes: true
+      simplenotes.see.self.warns: true
+      simplenotes.see.others.notes: true
+      simplenotes.see.others.warns: true
   simplenotes.addnotes:
     description: Gives the permission to add notes/warnings.
   simplenotes.removenotes:
     description: Gives the permission to remove notes/warnings.
-  simplenotes.seenotes.*:
+  simplenotes.see.*:
     description: Gives the permission to see the notes/warnings of all players.
     children:
-      simplenotes.seenotes.self: true
-      simplenotes.seenotes.others: true
-  simplenotes.seenotes.self:
+      simplenotes.see.self.notes: true
+      simplenotes.see.self.warns: true
+      simplenotes.see.others.notes: true
+      simplenotes.see.others.warns: true
+  simplenotes.see.self.*:
     description: Gives the permission to see your own notes/warnings
-  simplenotes.seenotes.others:
+    children:
+      simplenotes.see.self.notes: true
+      simplenotes.see.self.warns: true
+  simplenotes.see.self.notes:
+    description: Gives the permission to see your own notes
+  simplenotes.see.self.warns:
+    description: Gives the permission to see your own warnings
+  simplenotes.see.others.*:
     description: "Gives the permission to see other people's notes/warnings"
+    children:
+      simplenotes.see.others.notes: true
+      simplenotes.see.others.warns: true
+  simplenotes.see.others.notes:
+    description: "Gives the permission to see other people's notes"
+  simplenotes.see.others.warns:
+    description: "Gives the permission to see other people's warnings"

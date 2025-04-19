@@ -32,6 +32,7 @@ public class TemplatePlugin extends JavaPlugin {
         getCommand("note").setExecutor(new NoteCommand(this));
         getCommand("notes").setExecutor(new NoteCommand(this));
         getCommand("warn").setExecutor(new NoteCommand(this));
+        getCommand("warns").setExecutor(new NoteCommand(this));
         getCommand("warning").setExecutor(new NoteCommand(this));
         getCommand("warnings").setExecutor(new NoteCommand(this));
 
