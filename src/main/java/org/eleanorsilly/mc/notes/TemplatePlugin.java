@@ -3,7 +3,7 @@ package org.eleanorsilly.mc.notes;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.eleanorsilly.mc.notes.commands.TemplateTestCommand;
+import org.eleanorsilly.mc.notes.commands.NoteCommand;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -17,7 +17,6 @@ public class TemplatePlugin extends JavaPlugin {
 
     private TemplateConfig configuration;
 
-
     @Override
     public void onEnable() {
         plugin = this;
@@ -29,8 +28,12 @@ public class TemplatePlugin extends JavaPlugin {
         // Load configuration
         configuration = new TemplateConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
 
-        // Register the commands
-        getCommand("testcommand").setExecutor(new TemplateTestCommand(this));
+        // Register the command and the aliases
+        getCommand("note").setExecutor(new NoteCommand(this));
+        getCommand("notes").setExecutor(new NoteCommand(this));
+        getCommand("warn").setExecutor(new NoteCommand(this));
+        getCommand("warning").setExecutor(new NoteCommand(this));
+        getCommand("warnings").setExecutor(new NoteCommand(this));
 
         // Register the listeners
         TemplateListener listener = new TemplateListener(this);
@@ -55,5 +58,9 @@ public class TemplatePlugin extends JavaPlugin {
 
     public TemplateConfig getConfig() {
         return configuration;
+    }
+
+    public boolean WriteToFile(String filename, String content) {
+        return false
     }
 }
