@@ -4,16 +4,19 @@
 
 This plugin aims to provide a note/warning system implemented easily for beta 1.7.3. No other Minecraft versions are targeted and no support is provided for those other versions.
 
+This plugin currently assumes all players are paid accounts. Adding offline players isn't planned for now.
 ## Commands
 
-The plugin uses one command, /note (with aliases /notes, /warning and /warnings).
+The plugin uses one command, /note (with aliases /notes, /warn, /warns, /warning and /warnings).
 
 ### Subcommands
 
 - /note help: list the subcommands you have access to
 - /note list: list your own notes/warnings (permission: simplenotes.see.self.notes/warnings)
 - /note list [player]: list other player's notes/warnings (permission: simplenotes.see.others.notes/warnings)
-- /note add [player] [type (note/warn)] [content]: add a note to a player (permission: simplenotes.addnotes)
+- /note add [player] [content]: add a note to a player (permission: simplenotes.addnotes)
+- /warn add [player] [content]: add a warn to a player (permission: simplenotes.addnotes)
+ - This is the only case where the alias matter. You can use any of the warn* aliases for this.
 - /note remove [player] [id]: remove a note from a player (permission: simplenotes.removenotes)
 
 ## Compiling

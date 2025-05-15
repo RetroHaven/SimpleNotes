@@ -18,8 +18,25 @@
     <repositories>
         <!-- Repository for resolving release dependencies -->
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>johnymuffin-nexus-releases</id>
+            <url>https://repository.johnymuffin.com/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <!-- Repository for resolving snapshot dependencies -->
+        <repository>
+            <id>johnymuffin-nexus-snapshots</id>
+            <url>https://repository.johnymuffin.com/repository/maven-snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -43,15 +60,26 @@
         </plugins>
     </build>
 
-
     <dependencies>
-
         <dependency>
-            <groupId>com.github.retromcorg</groupId>
-            <artifactId>Project-Poseidon</artifactId>
+            <groupId>com.legacyminecraft.poseidon</groupId>
+            <artifactId>poseidon-craftbukkit</artifactId>
             <version>1.1.10-250328-1731-f67a8e3</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.13.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250107</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.11</version>
+        </dependency>
     </dependencies>
-
 </project>

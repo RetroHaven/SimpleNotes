@@ -1,7 +1,6 @@
 package org.eleanorsilly.mc.notes;
 
 import org.bukkit.util.config.Configuration;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -14,7 +13,7 @@ public class TemplateConfig extends Configuration {
     private final int configVersion = 1;
 
 
-    private TemplatePlugin plugin;
+    private NotePlugin plugin;
 
     /**
      * Constructs a new TemplateConfig instance.
@@ -22,7 +21,7 @@ public class TemplateConfig extends Configuration {
      * @param plugin     The plugin instance associated with this configuration.
      * @param configFile The configuration file to be managed.
      */
-    public TemplateConfig(TemplatePlugin plugin, File configFile) {
+    public TemplateConfig(NotePlugin plugin, File configFile) {
         super(configFile);
         this.plugin = plugin;
         this.reload();
