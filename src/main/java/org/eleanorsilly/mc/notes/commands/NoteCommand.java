@@ -3,7 +3,6 @@ package org.eleanorsilly.mc.notes.commands;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
-import com.opencsv.CSVWriterBuilder;
 import com.opencsv.exceptions.CsvValidationException;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
