@@ -1,6 +1,7 @@
 package org.eleanorsilly.mc.notes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eleanorsilly.mc.notes.commands.NoteCommand;
@@ -15,7 +16,7 @@ public class NotePlugin extends JavaPlugin {
     private String pluginName;
     private PluginDescriptionFile pdf;
 
-    private TemplateConfig configuration;
+    private NoteConfig configuration;
 
     @Override
     public void onEnable() {
@@ -26,14 +27,14 @@ public class NotePlugin extends JavaPlugin {
         log.info("[" + pluginName + "] is loading, version: " + pdf.getVersion());
 
         // Load configuration
-        configuration = new TemplateConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
+        configuration = new NoteConfig(this, new File(getDataFolder(), "config.yml")); // Load the configuration file from the plugin's data folder
 
         // Register the command and the aliases
         getCommand("note").setExecutor(new NoteCommand(this));
 
         // Register the listeners
-        TemplateListener listener = new TemplateListener(this);
-        getServer().getPluginManager().registerEvents(listener, this);
+        NoteListener listener = new NoteListener(this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, listener, Event.Priority.Monitor, this);
 
         log.info("[" + pluginName + "] Plugin loaded!");
     }
@@ -50,7 +51,7 @@ public class NotePlugin extends JavaPlugin {
         Bukkit.getLogger().log(level, "[" + plugin.getDescription().getName() + "] " + message);
     }
 
-    public TemplateConfig getConfig() {
+    public NoteConfig getConfig() {
         return configuration;
     }
 }
