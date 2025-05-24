@@ -1,6 +1,6 @@
 name: ${project.name}
 description: ${project.description}
-main: org.eleanorsilly.mc.notes
+main: org.eleanorsilly.mc.notes.NotePlugin
 version: ${project.version}
 authors:
   - eleanorsilly
@@ -8,7 +8,7 @@ softdepend:
   - Essentials
 
 commands:
-  notecommand:
+  note:
     description: Add, remove or see notes or warnings. /note help for more details.
     usage: /note [args]
     aliases: [notes, warn, warns, warning, warnings]

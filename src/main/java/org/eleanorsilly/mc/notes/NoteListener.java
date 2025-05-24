@@ -1,6 +1,5 @@
 package org.eleanorsilly.mc.notes;
 
-import org.bukkit.Note;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
