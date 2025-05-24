@@ -1,11 +1,11 @@
 package org.eleanorsilly.mc.notes;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerListener;
 import org.eleanorsilly.mc.notes.commands.NoteCommand;
 
-public class NoteListener implements Listener {
+public class NoteListener extends PlayerListener {
     private NotePlugin plugin;
     private NoteConfig config;
 
@@ -15,6 +15,7 @@ public class NoteListener implements Listener {
         this.config = plugin.getConfig();
     }
 
+    @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         NoteCommand commands = new NoteCommand(plugin);

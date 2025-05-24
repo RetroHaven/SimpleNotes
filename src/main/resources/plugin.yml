@@ -4,13 +4,11 @@ main: org.eleanorsilly.mc.notes.NotePlugin
 version: ${project.version}
 authors:
   - eleanorsilly
-softdepend:
-  - Essentials
 
 commands:
   note:
     description: Add, remove or see notes or warnings. /note help for more details.
-    usage: /note [args]
+    usage: /note [subcommand] [player] [additional arguments]
     aliases: [notes, warn, warns, warning, warnings]
 
 permissions:

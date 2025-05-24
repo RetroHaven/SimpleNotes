@@ -1,5 +1,6 @@
 package org.eleanorsilly.mc.notes.commands;
 
+import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -19,10 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class NoteCommand implements CommandExecutor {
 
@@ -40,8 +38,9 @@ public class NoteCommand implements CommandExecutor {
             return true;
         } else {
             // we create the folders above
-            List<File> parentList = Arrays.asList(file.getParentFile());
-            while (parentList.get(parentList.size() - 1).exists()) {
+            List<File> parentListInit = Arrays.asList(file.getParentFile());
+            List<File> parentList = new ArrayList<File>(parentListInit);
+            while (parentList.get(parentList.size() - 1).getParentFile() != null) {
                 parentList.add(parentList.get(parentList.size() - 1).getParentFile());
             }
             for (int i = parentList.size()-1; i > -1; i--) {
@@ -94,7 +93,6 @@ public class NoteCommand implements CommandExecutor {
     }
 
     public boolean NoteAdd(CommandSender sender, String[] args, String type) {
-        // done. not checked for bugs
         if (!sender.hasPermission("simplenotes.addnotes") && !sender.isOp()) {
             sender.sendMessage("You do not have permission to use this subcommand.");
             return false;
@@ -115,7 +113,9 @@ public class NoteCommand implements CommandExecutor {
         File dataFile = new File(filename);
         if (!this.CheckFileExists(dataFile)) {
             try {
-                dataFile.createNewFile();
+                if (!dataFile.createNewFile()) {
+                    throw new IOException("this didn't work");
+                }
             } catch (IOException e) {
                 sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
                 System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to create "+dataFile.getAbsolutePath());
@@ -135,21 +135,22 @@ public class NoteCommand implements CommandExecutor {
             return false;
         }
         String [] nextLine;
-        int i = 0;
-        while (true) {
-            try {
-                i = i + 1;
-                if ((nextLine = reader.readNext()) == null) {
+        int i = 1;
+        try {
+            while (true) {
+                if ((nextLine = reader.readNext()) != null) {
+                    i = Integer.parseInt(nextLine[0]) + 1;
+                } else {
                     break;
                 }
-            } catch (IOException e) {
-                sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-                System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-                System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
-                return false;
-            } catch (CsvValidationException e) {
-                throw new RuntimeException(e);
             }
+        } catch (IOException e) {
+            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            return false;
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
         }
         try {
             reader.close();
@@ -160,14 +161,14 @@ public class NoteCommand implements CommandExecutor {
             return false;
         }
 
-        Integer id = i+1; // we use the last ID + 1
+        Integer id = i; // we use the last ID + 1
         String id_str = id.toString();
-        type = type.substring(0,3).toUpperCase(); // we keep the first 4 char, so that we have note or warn
+        type = type.substring(0,4).toUpperCase(); // we keep the first 4 char, so that we have note or warn
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String dateStr = dateFormat.format(date);
 
-        char separator = '°';
         String author;
         if (sender instanceof Player) {
             author = sender.getName();
@@ -175,12 +176,22 @@ public class NoteCommand implements CommandExecutor {
             author = "CONSOLE";
         }
         try {
-            CSVWriter writer = new CSVWriter(new FileWriter(filename),
-                    separator,
+            CSVWriter writer = new CSVWriter(new FileWriter(filename, true),
+                    CSVWriter.DEFAULT_SEPARATOR,
                     '\"',
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                     CSVWriter.DEFAULT_LINE_END);
-            writer.writeNext(new String[] {id_str, type, dateStr, author, String.join(" ", Arrays.copyOfRange(args, 2, args.length))});
+            String[] line = {
+                    id_str,
+                    type,
+                    dateStr,
+                    author,
+                    String.join(" ",
+                            Arrays.copyOfRange(args, 2, args.length)
+                    )
+            };
+            writer.writeNext(line, true);
+            writer.close();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
             System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
@@ -188,28 +199,29 @@ public class NoteCommand implements CommandExecutor {
             return false;
         }
         // success!
-        sender.sendMessage(type.substring(0, 1).toUpperCase() + type.substring(1)+" added.");
+        sender.sendMessage(type.charAt(0) + type.substring(1).toLowerCase()+" added.");
         return true;
     }
 
     public boolean NoteRemove(CommandSender sender, String[] args) {
-        // done. not checked for bugs
         if (!sender.hasPermission("simplenotes.removenotes") && !sender.isOp()) {
             sender.sendMessage("You do not have permission to use this subcommand.");
             return false;
         }
-        if (args.length <= 1) {
+        if (args.length <= 2) {
             sender.sendMessage("Please provide a player name and an id.");
-            return false;
+            return true;
         }
-        String requestSubject = args[0];
+
+        String requestSubject = args[1];
         Object subjectUUID = this.getUUIDFromName(requestSubject);
         if (subjectUUID == null) {
             sender.sendMessage("Player doesn't exist.");
-            return false;
+            return true;
         }
         subjectUUID = subjectUUID.toString();
-        String filename = "plugin.getDataFolder()"+File.separator+"data"+File.separator+subjectUUID+".csv";
+
+        String filename = plugin.getDataFolder()+File.separator+"data"+File.separator+subjectUUID+".csv";
         File dataFile = new File(filename);
         if (!this.CheckFileExists(dataFile)) {
             // we do not try to create the file, since if it doesn't exist, the warn/note doesn't exist either
@@ -217,9 +229,12 @@ public class NoteCommand implements CommandExecutor {
             return false;
         }
 
+        // We dump the entire CSV file into allElements
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new FileReader(dataFile));
+            reader = new CSVReaderBuilder(new FileReader(filename))
+                    .withCSVParser(new CSVParserBuilder().build())
+                    .build();
         } catch (FileNotFoundException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
             System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
@@ -245,10 +260,19 @@ public class NoteCommand implements CommandExecutor {
             System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
+
+        /*
+        we delete the file, since we recreate the contents entirely later.
+        this is the recommended way to remove a specific line in a CSV file
+         */
         try {
-            // we delete the file, since we recreate the contents entirely later.
-            dataFile.delete();
-            dataFile.createNewFile();
+            if (!dataFile.delete() || !dataFile.createNewFile()) {
+                // something went wrong. we do not do data loss here
+                // so everything is printed to console
+                System.out.println("Content of "+filename+":");
+                System.out.println(allElements);
+                throw new IOException("this didn't work");
+            }
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
             System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
@@ -269,16 +293,19 @@ public class NoteCommand implements CommandExecutor {
         }
         allElements.remove(rowNumber);
 
-        FileWriter sw = null;
+        CSVWriter writer = null;
         try {
-            sw = new FileWriter(dataFile);
+            writer = new CSVWriter(new FileWriter(filename),
+                    CSVWriter.DEFAULT_SEPARATOR,
+                    '\"',
+                    CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                    CSVWriter.DEFAULT_LINE_END);
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
             System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
-        CSVWriter writer = new CSVWriter(sw);
         writer.writeAll(allElements);
         try {
             writer.close();
@@ -298,24 +325,24 @@ public class NoteCommand implements CommandExecutor {
         if (args.length == 1) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("You need to provide a player name when running this in the console.");
-                return false;
+                return true;
             }
             RequestSubject = sender.getName();
         }
         else RequestSubject = args[1];
         if (RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.self.notes") && !sender.hasPermission("simplenotes.see.self.warns") && !sender.isOp()) {
             if (!dontShowErrorMessage) sender.sendMessage("You do not have permission to check your own notes/warns.");
-            return false;
+            return true;
         }
         if (!RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.others.notes") && !sender.hasPermission("simplenotes.see.others.warns") && !sender.isOp()) {
             if (!dontShowErrorMessage) sender.sendMessage("You do not have permission to check other people's notes/warns.");
-            return false;
+            return true;
         }
 
         Object subjectUUID = this.getUUIDFromName(RequestSubject);
         if (subjectUUID == null) {
             if (!dontShowErrorMessage) sender.sendMessage("Player doesn't exist.");
-            return false;
+            return true;
         }
         subjectUUID = subjectUUID.toString();
 
@@ -324,12 +351,14 @@ public class NoteCommand implements CommandExecutor {
         if (!this.CheckFileExists(dataFile)) {
             // we do not try to create the file, since if it doesn't exist, there are no warns/notes
             if (!dontShowErrorMessage) sender.sendMessage("No notes or warns to show.");
-            return false;
+            return true;
         }
 
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new FileReader(dataFile));
+            reader = new CSVReaderBuilder(new FileReader(filename))
+                    .withCSVParser(new CSVParserBuilder().build())
+                    .build();
         } catch (FileNotFoundException e) {
             if (!dontShowErrorMessage) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
             System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
@@ -357,23 +386,24 @@ public class NoteCommand implements CommandExecutor {
         }
 
         int shownCounter = 0;
-        for (int i = 0; i < allElements.size(); i++) {
-            if (!RequestSubject.equals(sender.getName()) && sender.hasPermission("simplenotes.see.others.notes") && Objects.equals(allElements.get(i)[1], "NOTE")) {
+        System.out.println(Arrays.toString(allElements.get(0)));
+        for (String[] line : allElements) {
+            if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| "+String.join(" | ", allElements.get(i)));
-            } else if (RequestSubject.equals(sender.getName()) && sender.hasPermission("simplenotes.see.self.notes") && Objects.equals(allElements.get(i)[1], "NOTE")) {
+                sender.sendMessage("| " + String.join(" | ", line));
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| "+String.join(" | ", allElements.get(i)));
-            } else if (!RequestSubject.equals(sender.getName()) && sender.hasPermission("simplenotes.see.others.warns") && Objects.equals(allElements.get(i)[1], "WARN")) {
+                sender.sendMessage("| " + String.join(" | ", line));
+            } else if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) && Objects.equals(line[1], "WARN")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| "+String.join(" | ", allElements.get(i)));
-            } else if (RequestSubject.equals(sender.getName()) && sender.hasPermission("simplenotes.see.self.warns") && Objects.equals(allElements.get(i)[1], "WARN")) {
+                sender.sendMessage("| " + String.join(" | ", line));
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1], "WARN")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| "+String.join(" | ", allElements.get(i)));
+                sender.sendMessage("| " + String.join(" | ", line));
             }
         }
-        if (shownCounter == 1) {
-            sender.sendMessage("No notes or warnings to show.");
+        if (shownCounter == 0) {
+            sender.sendMessage("No notes or warns to show.");
         }
         return true;
     }
@@ -384,25 +414,31 @@ public class NoteCommand implements CommandExecutor {
         return NoteList(sender, args, false);
     }
 
-    public boolean NoteHelp(CommandSender sender) {
-        int removedCommands = 0;
+    public boolean NoteHelp(CommandSender sender, String alias) {
+        int removedCommands = 4;
         sender.sendMessage("=== Command list ===");
-        sender.sendMessage("- /note help: show this");
-        if (sender.hasPermission("simplenotes.see.self.notes") || sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) {
-            sender.sendMessage("- /note list: show your notes");
-            removedCommands = removedCommands + 1;
+        sender.sendMessage("- /"+alias+" help: show this");
+        if ((sender.hasPermission("simplenotes.see.self.notes") && sender.hasPermission("simplenotes.see.self.warns")) || sender.isOp()) {
+            sender.sendMessage("- /"+alias+" list: show your notes/warns");
+            removedCommands = removedCommands - 1;
+        } else if (sender.hasPermission("simplenotes.see.self.notes")) {
+            sender.sendMessage("- /"+alias+" list: show your notes");
+            removedCommands = removedCommands - 1;
+        } else if (sender.hasPermission("simplenotes.see.self.warns")) {
+            sender.sendMessage("- /"+alias+" list: show your warns");
+            removedCommands = removedCommands - 1;
         }
         if (sender.hasPermission("simplenotes.see.others.notes") || sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) {
-            sender.sendMessage("- /note list <player>: show another player's notes");
-            removedCommands = removedCommands + 1;
+            sender.sendMessage("- /"+alias+" list <player>: show another player's notes");
+            removedCommands = removedCommands - 1;
         }
         if (sender.hasPermission("simplenotes.addnotes") || sender.isOp()) {
-            sender.sendMessage("- /note add <player> <content>: add a note");
-            removedCommands = removedCommands + 1;
+            sender.sendMessage("- /"+alias+" add <player> <content>: add a "+alias.substring(0, 4));
+            removedCommands = removedCommands - 1;
         }
         if (sender.hasPermission("simplenotes.removenotes") || sender.isOp()) {
-            sender.sendMessage("- /note remove <id>: remove a note (you can get the id via /note list!)");
-            removedCommands = removedCommands + 1;
+            sender.sendMessage("- /"+alias+" remove <player> <id>: remove a note/warn (you can get the id via /"+alias+" list!)");
+            removedCommands = removedCommands - 1;
         }
         if (removedCommands > 0) {
             sender.sendMessage("You do not have access to any other subcommand.");
@@ -413,14 +449,14 @@ public class NoteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if the command is enabled
-        Boolean isEnabled = config.getConfigBoolean("settings.test-command.enabled.value");
+        Boolean isEnabled = config.getConfigBoolean("settings.plugin.enabled.value");
         if (!isEnabled) {
-            sender.sendMessage("This command is currently disabled.");
+            sender.sendMessage("This command is currently disabled. Please check the config.");
             return true;
         }
         // objects.equals is used to shut the IDE. it's not gonna be null let's be realistic.
         if (args.length == 0 || Objects.equals(args[0], "help")) {
-            return this.NoteHelp(sender);
+            return this.NoteHelp(sender, label);
         } else if (Objects.equals(args[0], "add")) {
             // label is needed because of the differentiation between notes and warnings
             return this.NoteAdd(sender, args, label);
@@ -430,7 +466,7 @@ public class NoteCommand implements CommandExecutor {
             return this.NoteList(sender, args);
         } else {
             sender.sendMessage("Unrecognized argument.");
-            return this.NoteHelp(sender);
+            return this.NoteHelp(sender, label);
         }
     }
 }
