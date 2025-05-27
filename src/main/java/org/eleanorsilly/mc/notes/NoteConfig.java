@@ -43,14 +43,13 @@ public class NoteConfig extends Configuration {
 
         // Plugin options
         generateConfigOption("settings.plugin.enabled.value", true);
-        generateConfigOption("settings.plugin.enabled.info", "Whether the test command is enabled.");
+        generateConfigOption("settings.plugin.enabled.info", "Whether the command is enabled.");
 
         generateConfigOption("settings.warns.showonlogin.value", true);
-        generateConfigOption("settings.warns.showonlogin.info", "Whether one's warns should be shown on login. Requires simplenotes.see.self.warns.");
-
+        generateConfigOption("settings.warns.showonlogin.info", "Whether one's warns should be shown on login. Requires the player to have simplenotes.see.self.warns.");
 
         generateConfigOption("settings.notes.showonlogin.value", false);
-        generateConfigOption("settings.notes.showonlogin.info", "Whether one's notes should be shown on login. Requires simplenotes.see.self.notes.");
+        generateConfigOption("settings.notes.showonlogin.info", "Whether one's notes should be shown on login. Requires the player to have simplenotes.see.self.notes.");
     }
 
     private void convertToNewConfig() {

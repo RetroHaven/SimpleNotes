@@ -33,8 +33,10 @@ public class NotePlugin extends JavaPlugin {
         getCommand("note").setExecutor(new NoteCommand(this));
 
         // Register the listeners
-        NoteListener listener = new NoteListener(this);
-        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, listener, Event.Priority.Monitor, this);
+        if (configuration.getConfigBoolean("settings.warns.showonlogin.value") || configuration.getConfigBoolean("settings.notes.showonlogin.value")) {
+            NoteListener listener = new NoteListener(this);
+            getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, listener, Event.Priority.Monitor, this);
+        }
 
         log.info("[" + pluginName + "] Plugin loaded!");
     }

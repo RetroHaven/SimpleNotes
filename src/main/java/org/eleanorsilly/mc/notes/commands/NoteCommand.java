@@ -21,6 +21,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 
 public class NoteCommand implements CommandExecutor {
 
@@ -118,8 +119,8 @@ public class NoteCommand implements CommandExecutor {
                 }
             } catch (IOException e) {
                 sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-                System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to create "+dataFile.getAbsolutePath());
-                System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+                this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to create "+dataFile.getAbsolutePath());
+                this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
                 return false;
             }
         }
@@ -130,8 +131,8 @@ public class NoteCommand implements CommandExecutor {
             reader = new CSVReaderBuilder(new FileReader(filename)).build();
         } catch (FileNotFoundException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         String [] nextLine;
@@ -146,8 +147,8 @@ public class NoteCommand implements CommandExecutor {
             }
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         } catch (CsvValidationException e) {
             throw new RuntimeException(e);
@@ -156,8 +157,8 @@ public class NoteCommand implements CommandExecutor {
             reader.close();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
 
@@ -194,8 +195,8 @@ public class NoteCommand implements CommandExecutor {
             writer.close();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         // success!
@@ -237,8 +238,8 @@ public class NoteCommand implements CommandExecutor {
                     .build();
         } catch (FileNotFoundException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         List<String[]> allElements = null;
@@ -246,8 +247,8 @@ public class NoteCommand implements CommandExecutor {
             allElements = reader.readAll();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         } catch (CsvException e) {
             throw new RuntimeException(e);
@@ -256,8 +257,8 @@ public class NoteCommand implements CommandExecutor {
             reader.close();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
 
@@ -269,14 +270,14 @@ public class NoteCommand implements CommandExecutor {
             if (!dataFile.delete() || !dataFile.createNewFile()) {
                 // something went wrong. we do not do data loss here
                 // so everything is printed to console
-                System.out.println("Content of "+filename+":");
-                System.out.println(allElements);
+                this.plugin.logger(Level.INFO,"Content of "+filename+":");
+                this.plugin.logger(Level.INFO,allElements.stream().map(Arrays::toString).reduce((a, b) -> a + "\n" + b).orElse(""));
                 throw new IOException("this didn't work");
             }
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         int rowNumber = -1;
@@ -302,8 +303,8 @@ public class NoteCommand implements CommandExecutor {
                     CSVWriter.DEFAULT_LINE_END);
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         writer.writeAll(allElements);
@@ -311,8 +312,8 @@ public class NoteCommand implements CommandExecutor {
             writer.close();
         } catch (IOException e) {
             sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         // success!
@@ -320,7 +321,7 @@ public class NoteCommand implements CommandExecutor {
         return true;
     }
 
-    public boolean NoteList(CommandSender sender, String[] args, boolean dontShowErrorMessage) {
+    public boolean NoteList(CommandSender sender, String[] args, boolean isListener) {
         String RequestSubject;
         if (args.length == 1) {
             if (!(sender instanceof Player)) {
@@ -331,17 +332,17 @@ public class NoteCommand implements CommandExecutor {
         }
         else RequestSubject = args[1];
         if (RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.self.notes") && !sender.hasPermission("simplenotes.see.self.warns") && !sender.isOp()) {
-            if (!dontShowErrorMessage) sender.sendMessage("You do not have permission to check your own notes/warns.");
+            if (!isListener) sender.sendMessage("You do not have permission to check your own notes/warns.");
             return true;
         }
         if (!RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.others.notes") && !sender.hasPermission("simplenotes.see.others.warns") && !sender.isOp()) {
-            if (!dontShowErrorMessage) sender.sendMessage("You do not have permission to check other people's notes/warns.");
+            if (!isListener) sender.sendMessage("You do not have permission to check other people's notes/warns.");
             return true;
         }
 
         Object subjectUUID = this.getUUIDFromName(RequestSubject);
         if (subjectUUID == null) {
-            if (!dontShowErrorMessage) sender.sendMessage("Player doesn't exist.");
+            if (!isListener) sender.sendMessage("Player doesn't exist.");
             return true;
         }
         subjectUUID = subjectUUID.toString();
@@ -350,7 +351,7 @@ public class NoteCommand implements CommandExecutor {
         File dataFile = new File(filename);
         if (!this.CheckFileExists(dataFile)) {
             // we do not try to create the file, since if it doesn't exist, there are no warns/notes
-            if (!dontShowErrorMessage) sender.sendMessage("No notes or warns to show.");
+            if (!isListener) sender.sendMessage("No notes or warns to show.");
             return true;
         }
 
@@ -360,18 +361,18 @@ public class NoteCommand implements CommandExecutor {
                     .withCSVParser(new CSVParserBuilder().build())
                     .build();
         } catch (FileNotFoundException e) {
-            if (!dontShowErrorMessage) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
         List<String[]> allElements = null;
         try {
             allElements = reader.readAll();
         } catch (IOException e) {
-            if (!dontShowErrorMessage) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         } catch (CsvException e) {
             throw new RuntimeException(e);
@@ -379,25 +380,24 @@ public class NoteCommand implements CommandExecutor {
         try {
             reader.close();
         } catch (IOException e) {
-            if (!dontShowErrorMessage) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
-            System.out.println("["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
-            System.out.println("["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
+            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
+            this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
         }
 
         int shownCounter = 0;
-        System.out.println(Arrays.toString(allElements.get(0)));
         for (String[] line : allElements) {
             if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE")) {
                 shownCounter = shownCounter + 1;
                 sender.sendMessage("| " + String.join(" | ", line));
-            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE")) {
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE") && (!isListener || config.getConfigBoolean("settings.notes.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
                 sender.sendMessage("| " + String.join(" | ", line));
             } else if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) && Objects.equals(line[1], "WARN")) {
                 shownCounter = shownCounter + 1;
                 sender.sendMessage("| " + String.join(" | ", line));
-            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1], "WARN")) {
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1], "WARN") && (!isListener || config.getConfigBoolean("settings.warns.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
                 sender.sendMessage("| " + String.join(" | ", line));
             }
@@ -409,7 +409,7 @@ public class NoteCommand implements CommandExecutor {
     }
 
     // the following should be used in all cases.
-    // the only reason we have dontShowErrorMessage is because of the NoteListener
+    // the only reason we have isListener is because of the NoteListener
     public boolean NoteList(CommandSender sender, String[] args) {
         return NoteList(sender, args, false);
     }

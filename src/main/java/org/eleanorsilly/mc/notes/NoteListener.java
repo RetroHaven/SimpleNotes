@@ -19,7 +19,8 @@ public class NoteListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         NoteCommand commands = new NoteCommand(plugin);
-        if (!player.hasPermission("simplenotes.see.self.warns") || config.getConfigBoolean("")) {
+        if ((!player.hasPermission("simplenotes.see.self.warns") || !config.getConfigBoolean("settings.warns.showonlogin.value"))
+                && (!player.hasPermission("simplenotes.see.self.notes") || !config.getConfigBoolean("settings.notes.showonlogin.value"))) {
             return;
         }
         boolean b = commands.NoteList(player, new String[] {""}, true);
