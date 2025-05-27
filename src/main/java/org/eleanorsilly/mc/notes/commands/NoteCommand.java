@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.eleanorsilly.mc.notes.NoteConfig;
 import org.eleanorsilly.mc.notes.NotePlugin;
 import org.json.JSONObject;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,6 +24,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class NoteCommand implements CommandExecutor {
 
@@ -41,7 +45,7 @@ public class NoteCommand implements CommandExecutor {
             // we create the folders above
             List<File> parentListInit = Arrays.asList(file.getParentFile());
             List<File> parentList = new ArrayList<File>(parentListInit);
-            while (parentList.get(parentList.size() - 1).getParentFile() != null) {
+            while (parentList.get(parentList.size() - 1).getParentFile() != null && !parentList.get(parentList.size() - 1).getParentFile().exists()) {
                 parentList.add(parentList.get(parentList.size() - 1).getParentFile());
             }
             for (int i = parentList.size()-1; i > -1; i--) {
@@ -61,34 +65,44 @@ public class NoteCommand implements CommandExecutor {
         }
     }
 
+    // caching for UUIDs, to prevent unnecessary requests to the API
+    private final Cache<String, Object> uuidCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(30, TimeUnit.DAYS)
+                .build();
     public Object getUUIDFromName(String playerName) {
         try {
-            String urlString = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
-            URL url = URI.create(urlString).toURL();
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            return uuidCache.get(playerName, () -> {
+                try {
+                    String urlString = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
+                    URL url = URI.create(urlString).toURL();
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
 
-            int responseCode = conn.getResponseCode();
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
+                    int responseCode = conn.getResponseCode();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    StringBuilder content = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                content.append(inputLine);
-            }
+                    while ((inputLine = in.readLine()) != null) {
+                        content.append(inputLine);
+                    }
 
-            in.close();
-            conn.disconnect();
+                    in.close();
+                    conn.disconnect();
 
-            JSONObject jsonobj = new JSONObject(content.toString());
-            if (jsonobj.has("errorMessage")) {
-                // couldn't find a profile with this name
-                return null;
-            }
-            return jsonobj.getString("id");
-        } catch (Exception e) {
-            // probably network error. nothing we can do.
-            // unlikely to happen realistically though
+                    JSONObject jsonobj = new JSONObject(content.toString());
+                    if (jsonobj.has("errorMessage")) {
+                        // couldn't find a profile with this name
+                        return null;
+                    }
+                    return jsonobj.getString("id");
+                } catch (Exception e) {
+                    // probably network error. nothing we can do.
+                    // unlikely to happen realistically though
+                    return null;
+                }
+            });
+        } catch (ExecutionException e) {
             return null;
         }
     }
