@@ -410,16 +410,16 @@ public class NoteCommand implements CommandExecutor {
 
             if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.notes") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "NOTE")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+                sender.sendMessage("§8| " + String.join(" §8|§f ", line));
             } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "NOTE") && (!isListener || config.getConfigBoolean("settings.notes.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+                sender.sendMessage("§8| " + String.join(" §8|§f ", line));
             } else if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "WARN")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+                sender.sendMessage("§8| " + String.join(" §8|§f ", line));
             } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "WARN") && (!isListener || config.getConfigBoolean("settings.warns.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+                sender.sendMessage("§8| " + String.join(" §8|§f ", line));
             }
         }
         if (shownCounter == 0) {
