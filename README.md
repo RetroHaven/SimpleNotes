@@ -4,13 +4,15 @@
 
 This plugin aims to provide a note/warning system implemented easily for beta 1.7.3. No other Minecraft versions are targeted and no support is provided for those other versions.
 
-This plugin currently assumes all players are paid accounts. Adding offline players isn't planned for now.
+This plugin currently assumes all players are paid accounts. Adding offline players support isn't planned for now.
 
 Tested with Project Poseidon. Plain Bukkit should work since this project doesn't use any of Poseidon's APIs.
 
 ## Commands
 
 The plugin uses one command, /note (with aliases /notes, /warn, /warns, /warning and /warnings).
+
+This command is disabled by default to make you look through the config (it's located in plugins/SimpleNotes/config.yml!).
 
 ### Subcommands
 
