@@ -1,9 +1,9 @@
-package org.eleanorsilly.mc.notes;
+package org.retrohaven.mc.notes;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.eleanorsilly.mc.notes.commands.NoteCommand;
+import org.retrohaven.mc.notes.commands.NoteCommand;
 
 public class NoteListener extends PlayerListener {
     private NotePlugin plugin;

@@ -1,4 +1,4 @@
-package org.eleanorsilly.mc.notes;
+package org.retrohaven.mc.notes;
 
 import org.bukkit.util.config.Configuration;
 

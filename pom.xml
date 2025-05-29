@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.eleanorsilly.mc.notes</groupId>
+    <groupId>org.retrohaven.mc.notes</groupId>
     <artifactId>SimpleNotes</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <description>A note system for moderators and admins, with the objective to be light on the system and on the codebase.</description>
@@ -72,7 +72,7 @@
                     <relocations>
                         <relocation>
                             <pattern>com.google.common</pattern>
-                            <shadedPattern>org.eleanorsilly.shaded.com.google.common</shadedPattern>
+                            <shadedPattern>org.retrohaven.shaded.com.google.common</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

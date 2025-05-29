@@ -1,6 +1,6 @@
 name: ${project.name}
 description: ${project.description}
-main: org.eleanorsilly.mc.notes.NotePlugin
+main: org.retrohaven.mc.notes.NotePlugin
 version: ${project.version}
 authors:
   - eleanorsilly

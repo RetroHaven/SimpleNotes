@@ -1,10 +1,10 @@
-package org.eleanorsilly.mc.notes;
+package org.retrohaven.mc.notes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.eleanorsilly.mc.notes.commands.NoteCommand;
+import org.retrohaven.mc.notes.commands.NoteCommand;
 
 import java.io.*;
 import java.util.logging.Level;
