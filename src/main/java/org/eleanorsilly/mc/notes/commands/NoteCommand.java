@@ -30,8 +30,9 @@ import java.util.concurrent.TimeUnit;
 public class NoteCommand implements CommandExecutor {
 
     private final NotePlugin plugin;
-
     private final NoteConfig config;
+    private final String errorColorCode = "§e";
+    private final String permissionColorCode = "§3";
 
     public NoteCommand(NotePlugin plugin) {
         this.plugin = plugin;
@@ -109,17 +110,17 @@ public class NoteCommand implements CommandExecutor {
 
     public boolean NoteAdd(CommandSender sender, String[] args, String type) {
         if (!sender.hasPermission("simplenotes.addnotes") && !sender.isOp()) {
-            sender.sendMessage("You do not have permission to use this subcommand.");
+            sender.sendMessage(permissionColorCode+"You do not have permission to use this subcommand.");
             return false;
         }
         if (args.length == 1) {
-            sender.sendMessage("Please provide a player name.");
+            sender.sendMessage(errorColorCode+"Please provide a player name.");
             return false;
         }
         String requestSubject = args[1];
         Object subjectUUID = this.getUUIDFromName(requestSubject);
         if (subjectUUID == null) {
-            sender.sendMessage("Player doesn't exist.");
+            sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return false;
         }
         subjectUUID = subjectUUID.toString();
@@ -132,7 +133,7 @@ public class NoteCommand implements CommandExecutor {
                     throw new IOException("this didn't work");
                 }
             } catch (IOException e) {
-                sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+                sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
                 this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to create "+dataFile.getAbsolutePath());
                 this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
                 return false;
@@ -144,7 +145,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             reader = new CSVReaderBuilder(new FileReader(filename)).build();
         } catch (FileNotFoundException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -160,7 +161,7 @@ public class NoteCommand implements CommandExecutor {
                 }
             }
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -170,7 +171,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             reader.close();
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -208,7 +209,7 @@ public class NoteCommand implements CommandExecutor {
             writer.writeNext(line, true);
             writer.close();
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -220,18 +221,18 @@ public class NoteCommand implements CommandExecutor {
 
     public boolean NoteRemove(CommandSender sender, String[] args) {
         if (!sender.hasPermission("simplenotes.removenotes") && !sender.isOp()) {
-            sender.sendMessage("You do not have permission to use this subcommand.");
+            sender.sendMessage(permissionColorCode+"You do not have permission to use this subcommand.");
             return false;
         }
         if (args.length <= 2) {
-            sender.sendMessage("Please provide a player name and an id.");
+            sender.sendMessage(errorColorCode+"Please provide a player name and an id.");
             return true;
         }
 
         String requestSubject = args[1];
         Object subjectUUID = this.getUUIDFromName(requestSubject);
         if (subjectUUID == null) {
-            sender.sendMessage("Player doesn't exist.");
+            sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return true;
         }
         subjectUUID = subjectUUID.toString();
@@ -240,7 +241,7 @@ public class NoteCommand implements CommandExecutor {
         File dataFile = new File(filename);
         if (!this.CheckFileExists(dataFile)) {
             // we do not try to create the file, since if it doesn't exist, the warn/note doesn't exist either
-            sender.sendMessage("Note/warn not found.");
+            sender.sendMessage(errorColorCode+"Note/warn not found.");
             return false;
         }
 
@@ -251,7 +252,7 @@ public class NoteCommand implements CommandExecutor {
                     .withCSVParser(new CSVParserBuilder().build())
                     .build();
         } catch (FileNotFoundException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -260,7 +261,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             allElements = reader.readAll();
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -270,7 +271,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             reader.close();
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -289,7 +290,7 @@ public class NoteCommand implements CommandExecutor {
                 throw new IOException("this didn't work");
             }
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -303,7 +304,7 @@ public class NoteCommand implements CommandExecutor {
             }
         }
         if (rowNumber == -1) {
-            sender.sendMessage("Note/warn not found.");
+            sender.sendMessage(errorColorCode+"Note/warn not found.");
             return false;
         }
         allElements.remove(rowNumber);
@@ -316,7 +317,7 @@ public class NoteCommand implements CommandExecutor {
                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                     CSVWriter.DEFAULT_LINE_END);
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -325,7 +326,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             writer.close();
         } catch (IOException e) {
-            sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -346,17 +347,17 @@ public class NoteCommand implements CommandExecutor {
         }
         else RequestSubject = args[1];
         if (RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.self.notes") && !sender.hasPermission("simplenotes.see.self.warns") && !sender.isOp()) {
-            if (!isListener) sender.sendMessage("You do not have permission to check your own notes/warns.");
+            if (!isListener) sender.sendMessage(permissionColorCode+"You do not have permission to check your own notes/warns.");
             return true;
         }
         if (!RequestSubject.equals(sender.getName()) && !sender.hasPermission("simplenotes.see.others.notes") && !sender.hasPermission("simplenotes.see.others.warns") && !sender.isOp()) {
-            if (!isListener) sender.sendMessage("You do not have permission to check other people's notes/warns.");
+            if (!isListener) sender.sendMessage(permissionColorCode+"You do not have permission to check other people's notes/warns.");
             return true;
         }
 
         Object subjectUUID = this.getUUIDFromName(RequestSubject);
         if (subjectUUID == null) {
-            if (!isListener) sender.sendMessage("Player doesn't exist.");
+            if (!isListener) sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return true;
         }
         subjectUUID = subjectUUID.toString();
@@ -365,7 +366,7 @@ public class NoteCommand implements CommandExecutor {
         File dataFile = new File(filename);
         if (!this.CheckFileExists(dataFile)) {
             // we do not try to create the file, since if it doesn't exist, there are no warns/notes
-            if (!isListener) sender.sendMessage("No notes or warns to show.");
+            if (!isListener) sender.sendMessage(errorColorCode+"No notes or warns to show.");
             return true;
         }
 
@@ -375,7 +376,7 @@ public class NoteCommand implements CommandExecutor {
                     .withCSVParser(new CSVParserBuilder().build())
                     .build();
         } catch (FileNotFoundException e) {
-            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            if (!isListener) sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -384,7 +385,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             allElements = reader.readAll();
         } catch (IOException e) {
-            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            if (!isListener) sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -394,7 +395,7 @@ public class NoteCommand implements CommandExecutor {
         try {
             reader.close();
         } catch (IOException e) {
-            if (!isListener) sender.sendMessage("Internal error. Ask your local sys-admin to check the console.");
+            if (!isListener) sender.sendMessage(errorColorCode+"Internal error. Ask your local sys-admin to check the console.");
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] ERROR: Failed to access "+filename);
             this.plugin.logger(Level.SEVERE,"["+this.plugin.getDescription().getName()+"] Check the permissions of the folders.");
             return false;
@@ -402,18 +403,24 @@ public class NoteCommand implements CommandExecutor {
 
         int shownCounter = 0;
         for (String[] line : allElements) {
-            if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE")) {
+            // some transformation first
+            line[0] = "§8"+line[0];
+            if (Objects.equals(line[1], "NOTE")) line[1] = "§eNOTE";
+            if (Objects.equals(line[1], "WARN")) line[1] = "§cWARN";
+            line[2] = "§9"+line[2];
+
+            if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.notes") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "NOTE")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| " + String.join(" | ", line));
-            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1], "NOTE") && (!isListener || config.getConfigBoolean("settings.notes.showonlogin.value"))) {
+                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.notes") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "NOTE") && (!isListener || config.getConfigBoolean("settings.notes.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| " + String.join(" | ", line));
-            } else if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) && Objects.equals(line[1], "WARN")) {
+                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+            } else if (!RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.others.warns") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "WARN")) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| " + String.join(" | ", line));
-            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1], "WARN") && (!isListener || config.getConfigBoolean("settings.warns.showonlogin.value"))) {
+                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
+            } else if (RequestSubject.equals(sender.getName()) && (sender.hasPermission("simplenotes.see.self.warns") || sender.isOp()) && Objects.equals(line[1].substring(line[1].length() -4), "WARN") && (!isListener || config.getConfigBoolean("settings.warns.showonlogin.value"))) {
                 shownCounter = shownCounter + 1;
-                sender.sendMessage("| " + String.join(" | ", line));
+                sender.sendMessage("§8| " + String.join(" §8|§r ", line));
             }
         }
         if (shownCounter == 0) {
@@ -455,7 +462,7 @@ public class NoteCommand implements CommandExecutor {
             removedCommands = removedCommands - 1;
         }
         if (removedCommands > 0) {
-            sender.sendMessage("You do not have access to any other subcommand.");
+            sender.sendMessage(permissionColorCode+"You do not have access to any other subcommand.");
         }
         return true;
     }
@@ -479,7 +486,7 @@ public class NoteCommand implements CommandExecutor {
         } else if (Objects.equals(args[0], "list")) {
             return this.NoteList(sender, args);
         } else {
-            sender.sendMessage("Unrecognized argument.");
+            sender.sendMessage(errorColorCode+"Unrecognized argument.");
             return this.NoteHelp(sender, label);
         }
     }
