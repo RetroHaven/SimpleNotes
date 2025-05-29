@@ -6,7 +6,7 @@
 
     <groupId>org.retrohaven.mc.notes</groupId>
     <artifactId>SimpleNotes</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <description>A note system for moderators and admins, with the objective to be light on the system and on the codebase.</description>
 
     <properties>
