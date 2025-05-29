@@ -404,7 +404,6 @@ public class NoteCommand implements CommandExecutor {
         int shownCounter = 0;
         for (String[] line : allElements) {
             // some transformation first
-            line[0] = "§8"+line[0];
             if (Objects.equals(line[1], "NOTE")) line[1] = "§eNOTE";
             if (Objects.equals(line[1], "WARN")) line[1] = "§cWARN";
             line[2] = "§9"+line[2];
