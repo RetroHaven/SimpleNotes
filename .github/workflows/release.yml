@@ -1,4 +1,6 @@
 name: Release Workflow
+permissions:
+  contents: write
 
 on:
   push:
