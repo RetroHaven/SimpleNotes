@@ -43,9 +43,6 @@ public class NotePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Save configuration
-        //config.save(); // Save the configuration file to disk. This should only be necessary if the configuration cam be modified during runtime.
-
         log.info("[" + pluginName + "] Plugin unloaded!");
     }
 
