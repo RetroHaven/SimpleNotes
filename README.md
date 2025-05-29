@@ -1,45 +1,27 @@
-# Poseidon-Plugin-Template
+# SimpleNotes
 
-This repository serves as a template to assist with creating plugins for Project Poseidon.
+This plugin aims to provide a note/warning system implemented easily for beta 1.7.3. No other Minecraft versions are targeted and no support is provided for those other versions.
 
-It includes examples of:
-- A configuration file.
-- A listener.
-- A command.
+This plugin currently assumes all players are paid accounts. Adding offline players support isn't planned for now.
 
-## Steps to Use This Template
+Tested with Project Poseidon. Plain Bukkit should work since this project doesn't use any of Poseidon's APIs.
 
-1. **Clone the Repository**
-    - Clone this repository to your local machine.
+## Commands
 
-2. **Modify `pom.xml`**
-    - Update the following fields to reflect your plugin:
-        - `name`
-        - `version`
-        - `description`
-    - **Note:** Removing `-SNAPSHOT` from the version will trigger the `release.yml` GitHub Action to create a GitHub release.
+The plugin uses one command, /note (with aliases /notes, /warn, /warns, /warning and /warnings).
 
-3. **Refactor Package Structure**
-    - Refactor the package `org.retromc.templateplugin` to a unique package name for your plugin to avoid conflicts.
+This command is disabled by default to make you look through the config (it's located in plugins/SimpleNotes/config.yml!).
 
-4. **Update `plugin.yml`**
-    - Update the `plugin.yml` file to match the refactored package name and plugin metadata.
+### Subcommands
 
-5. **Modify the Code**
-    - Customize the code as required for your plugin.
-    - **Important:**
-        - Remove the player greeting example in the listener.
-        - Remove the test command.
+- /note help: list the subcommands you have access to
+- /note list: list your own notes/warnings (permission: simplenotes.see.self.notes/warns)
+- /note list [player]: list another player's notes/warnings (permission: simplenotes.see.others.notes/warns)
+- /note add [player] [content]: add a note to a player (permission: simplenotes.addnotes)
+- /warn add [player] [content]: add a warn to a player (permission: simplenotes.addnotes)
+  - This is the only case where the alias matter. You can use any of the warn* aliases for this.
+- /note remove [player] [id]: remove a note from a player (permission: simplenotes.removenotes)
 
-## GitHub Actions
+## Compiling
 
-This repository includes a pre-configured GitHub Action:
-
-1. **`build-and-test.yml`**:
-    - Runs tests on every push to ensure code quality.
-    - Uploads an artifact for each commit, allowing others to download the plugin for testing.
-
-2. **`release.yml`**:
-    - Automatically creates a GitHub release if the `-SNAPSHOT` suffix is removed from the version in `pom.xml`.
-
-With this template, you can kickstart your plugin development for Project Poseidon quickly and efficiently.
+Clone the repository and run `mvn clean package`. The resulting jar should be in the `target` folder.

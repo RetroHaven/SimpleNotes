@@ -1,7 +1,6 @@
-package org.retromc.templateplugin;
+package org.retrohaven.mc.notes;
 
 import org.bukkit.util.config.Configuration;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -10,19 +9,18 @@ import java.io.File;
  * Extends the {@link Configuration} class to provide additional utility methods for
  * reading and writing configuration options with defaults.
  */
-public class TemplateConfig extends Configuration {
-    private final int configVersion = 1;
+public class NoteConfig extends Configuration {
+    private final int configVersion = 0;
 
-
-    private TemplatePlugin plugin;
+    private NotePlugin plugin;
 
     /**
-     * Constructs a new TemplateConfig instance.
+     * Constructs a new NoteConfig instance.
      *
      * @param plugin     The plugin instance associated with this configuration.
      * @param configFile The configuration file to be managed.
      */
-    public TemplateConfig(TemplatePlugin plugin, File configFile) {
+    public NoteConfig(NotePlugin plugin, File configFile) {
         super(configFile);
         this.plugin = plugin;
         this.reload();
@@ -44,24 +42,20 @@ public class TemplateConfig extends Configuration {
         generateConfigOption("config-version", configVersion);
 
         // Plugin options
-        generateConfigOption("settings.test-command.enabled.value", true);
-        generateConfigOption("settings.test-command.enabled.info", "Whether the test command is enabled."); // Informational comment
+        generateConfigOption("settings.plugin.enabled.value", false);
+        generateConfigOption("settings.plugin.enabled.info", "Whether the command is enabled.");
 
-        generateConfigOption("settings.test-command.response.value", "This is the response sent to players when they execute the test command.");
-        generateConfigOption("settings.test-command.response.info", "The response sent to players when they execute the test command."); // Informational comment
+        generateConfigOption("settings.warns.showonlogin.value", true);
+        generateConfigOption("settings.warns.showonlogin.info", "Whether one's warns should be shown on login. Requires the player to have simplenotes.see.self.warns.");
 
-        generateConfigOption("settings.welcome-message.value", "Welcome to the server, %player%!");
-        generateConfigOption("settings.welcome-message.info", "The message sent to players when join the server."); // Informational comment
+        generateConfigOption("settings.notes.showonlogin.value", false);
+        generateConfigOption("settings.notes.showonlogin.info", "Whether one's notes should be shown on login. Requires the player to have simplenotes.see.self.notes.");
     }
 
     private void convertToNewConfig() {
         // Convert old configuration keys to new keys
-
-        // Convert from old config version 0 to new config version 1
-        if(this.getString("config-version") == null || Integer.valueOf(this.getString("config-version")) < 1) {
-            convertToNewAddress("settings.test-command-response.value", "settings.test-command.response.value", true);
-            convertToNewAddress("settings.test-command.enabled", "settings.test-command.enabled.value", true);
-        }
+        // Currently unused
+        ;
     }
 
     /**
