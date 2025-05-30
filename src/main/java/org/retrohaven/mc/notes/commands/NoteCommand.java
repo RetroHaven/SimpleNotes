@@ -32,7 +32,7 @@ public class NoteCommand implements CommandExecutor {
     private final NotePlugin plugin;
     private final NoteConfig config;
     private final String errorColorCode = "§e";
-    private final String permissionColorCode = "§3";
+    private final String permissionColorCode = "§4";
 
     public NoteCommand(NotePlugin plugin) {
         this.plugin = plugin;
