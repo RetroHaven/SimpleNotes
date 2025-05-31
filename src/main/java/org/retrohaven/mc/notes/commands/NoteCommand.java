@@ -422,7 +422,7 @@ public class NoteCommand implements CommandExecutor {
                 sender.sendMessage("§8| " + String.join(" §8|§f ", line));
             }
         }
-        if (shownCounter == 0) {
+        if (shownCounter == 0 && !isListener) {
             sender.sendMessage("No notes or warns to show.");
         }
         return true;
