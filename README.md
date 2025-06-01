@@ -22,6 +22,17 @@ This command is disabled by default to make you look through the config (it's lo
   - This is the only case where the alias matter. You can use any of the warn* aliases for this.
 - /note remove [player] [id]: remove a note from a player (permission: simplenotes.removenotes)
 
+## Permissions
+
+- simplenotes.addnotes: add notes/warns
+- simplenotes.removenotes: remove notes/warns
+- simplenotes.see.self.notes: see your own notes
+- simplenotes.see.self.warns: see your own warns
+- simplenotes.see.others.notes: see other people's notes
+- simplenotes.see.others.warns: see other people's warns
+
+Permissions were tested with PermissionsEx, version 1.14. Notation with simplenotes.* and derivatives should work.
+
 ## Compiling
 
 Clone the repository and run `mvn clean package`. The resulting jar should be in the `target` folder.
