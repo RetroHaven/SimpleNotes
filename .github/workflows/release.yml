@@ -24,7 +24,9 @@ jobs:
 
       - name: Get the version from pom.xml
         id: get_version
-        run: echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+        run: |
+          echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          echo "PROJECT_NAME=$(mvn help:evaluate -Dexpression=project.name -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: Fail if snapshot version
         run: |
@@ -43,6 +45,6 @@ jobs:
           tag_name: ${{ env.PROJECT_VERSION }}
           body_path: changelogs/${{ env.PROJECT_VERSION }}.md
           files: |
-            target/*.jar
+            target/${{ env.PROJECT_VERSION }}*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
