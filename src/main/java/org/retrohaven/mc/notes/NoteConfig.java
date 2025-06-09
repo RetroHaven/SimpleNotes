@@ -42,7 +42,7 @@ public class NoteConfig extends Configuration {
         generateConfigOption("config-version", configVersion);
 
         // Plugin options
-        generateConfigOption("settings.plugin.enabled.value", false);
+        generateConfigOption("settings.plugin.enabled.value", true);
         generateConfigOption("settings.plugin.enabled.info", "Whether the command is enabled.");
 
         generateConfigOption("settings.warns.showonlogin.value", true);
