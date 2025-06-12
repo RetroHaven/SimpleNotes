@@ -94,17 +94,17 @@ public class NoteCommand implements CommandExecutor {
                     JSONObject jsonobj = new JSONObject(content.toString());
                     if (jsonobj.has("errorMessage")) {
                         // couldn't find a profile with this name
-                        return null;
+                        return "null";
                     }
                     return jsonobj.getString("id");
                 } catch (Exception e) {
                     // probably network error. nothing we can do.
                     // unlikely to happen realistically though
-                    return null;
+                    return "null";
                 }
             });
         } catch (ExecutionException e) {
-            return null;
+            return "null";
         }
     }
 
@@ -119,7 +119,7 @@ public class NoteCommand implements CommandExecutor {
         }
         String requestSubject = args[1];
         Object subjectUUID = this.getUUIDFromName(requestSubject);
-        if (subjectUUID == null) {
+        if (subjectUUID == "null") {
             sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return false;
         }
@@ -231,7 +231,7 @@ public class NoteCommand implements CommandExecutor {
 
         String requestSubject = args[1];
         Object subjectUUID = this.getUUIDFromName(requestSubject);
-        if (subjectUUID == null) {
+        if (subjectUUID == "null") {
             sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return true;
         }
@@ -356,7 +356,7 @@ public class NoteCommand implements CommandExecutor {
         }
 
         Object subjectUUID = this.getUUIDFromName(RequestSubject);
-        if (subjectUUID == null) {
+        if (subjectUUID == "null") {
             if (!isListener) sender.sendMessage(errorColorCode+"Player doesn't exist.");
             return true;
         }
