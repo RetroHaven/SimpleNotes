@@ -45,6 +45,6 @@ jobs:
           tag_name: ${{ env.PROJECT_VERSION }}
           body_path: changelogs/${{ env.PROJECT_VERSION }}.md
           files: |
-            target/${{ env.PROJECT_VERSION }}*.jar
+            target/${{ env.PROJECT_NAME }}*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
